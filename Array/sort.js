@@ -1,3 +1,39 @@
+function test() {
+  let data = [1, 0, -12, 8, 30, -1];
+  quickSort(data);
+  console.log(data);
+}
+test();
+
+function partition(arr, left, right) {
+  let pivot = left, //左值作为基准
+    index = pivot + 1;
+  for (let i = index; i <= right; i++) {
+    if (arr[i] < arr[pivot]) {
+      swap(arr, i, index);
+      index++;
+    }
+  }
+  swap(arr, pivot, index - 1);
+  return index - 1;
+}
+function swap(arr, i, j) {
+  let temp = arr[i];
+  arr[i] = arr[j];
+  arr[j] = temp;
+}
+function quickSort(arr, left, right) {
+  let len = arr.length,
+    partitionIndex;
+  left = typeof left != "number" ? 0 : left;
+  right = typeof right != "number" ? len - 1 : right;
+  if (left < right) {
+    partitionIndex = partition(arr, left, right);
+    quickSort(arr, left, partitionIndex - 1);
+    quickSort(arr, partitionIndex + 1, right);
+  }
+}
+
 /**
  * 冒泡排序，最经典的排序
  * @param {*} arr
@@ -42,14 +78,28 @@ function selectionSort(arr) {
 function insertSort(arr) {
   let len = arr.length;
   for (let i = 1; i < len; i++) {
-    for (var j = i - 1; j > 0 && arr[j]-arr[i]>0 ; j--) arr[j+1]=arr[j]
-    arr[j+1]=arr[i]
+    let current = arr[i];
+    for (var j = i - 1; j >= 0 && arr[j] - current > 0; j--)
+      arr[j + 1] = arr[j];
+    arr[j + 1] = current;
   }
 }
 
-function test() {
-  let data = [1, 0, -12, 8, 30, -1];
-  insertSort(data);
-  console.log(data);
+/**
+ * 希尔排序
+ * @param {*} arr
+ */
+function shellSort(arr) {
+  let len = arr.length,
+    gap = 1,
+    current;
+  while (gap < len / 3) gap = gap * 3 + 1;
+  for (gap; gap > 0; gap = Math.floor(gap / 3)) {
+    for (let i = gap; i < len; i++) {
+      current = arr[i];
+      for (var j = i - gap; j >= 0 && arr[j] - current > 0; j -= gap)
+        arr[j + gap] = arr[j];
+      arr[j + gap] = current;
+    }
+  }
 }
-test();
